@@ -1,13 +1,58 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+    * {
+        font-family: 'Open Sans';
+        @apply cursor-default;
+    }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    body {
+        @apply bg-white
+    }
+
+    section {
+        @apply my-8;
+    }
+
+    h1 {
+        @apply text-4xl text-brand font-extrabold p-2 m-2;
+    }
+
+    h3 {
+        @apply text-2xl text-brand font-semibold p-2 m-2;
+    }
+
+    li {
+        @apply p-2 m-2 font-semibold hover:font-extrabold hover:text-brand-light text-white cursor-pointer hover:uppercase;
+    }
+
+    p {
+        @apply text-lg p-2 m-2;
+    }
+
+    button {
+        @apply border-2 border-solid border-brand cursor-pointer bg-white p-2 m-2 hover:bg-brand hover:text-white uppercase w-[200px];
+    }
+
+    a {
+        @apply cursor-pointer;
+    }
+
+    form {
+        @apply flex;
+    }
+
+    label {
+        @apply text-2xl p-2 m-2;
+    }
+
+    input {
+        @apply p-2 m-2 rounded-xl border-brand border-2 cursor-pointer;
+    }
+
+    hr {
+        @apply border-b w-10 my-4;
+    }
 }

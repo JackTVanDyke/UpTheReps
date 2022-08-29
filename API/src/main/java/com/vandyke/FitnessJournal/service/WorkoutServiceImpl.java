@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
@@ -19,17 +20,17 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public Workout getWorkoutById(long workoutId) {
-        return workoutDao.findWorkoutByWorkoutId(workoutId);
+    public Optional<Workout> getWorkoutById(long workoutId) {
+        return workoutDao.findById(workoutId);
     }
 
     @Override
-    public Workout getWorkoutByNameAndUserId(String name, long userId) {
+    public Optional<Workout> getWorkoutByNameAndUserId(String name, long userId) {
         return workoutDao.findWorkoutByNameAndUserUserId(name, userId);
     }
 
     @Override
-    public Workout getWorkoutByDateAndUserId(Date date, long userId) {
+    public Optional<Workout> getWorkoutByDateAndUserId(Date date, long userId) {
         return workoutDao.findWorkoutByDateAndUserUserId(date, userId);
     }
 
@@ -52,7 +53,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public List<Workout> getWorkoutsByUserId(long userId) {
+    public List<Optional<Workout>> getWorkoutsByUserId(long userId) {
         return workoutDao.findWorkoutsByUserUserId(userId);
     }
 }

@@ -5,6 +5,8 @@ import com.vandyke.FitnessJournal.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(long userId) {
-        return userDao.findUserByUserId(userId);
+        return userDao.findById(userId).get();
     }
 
     @Override
