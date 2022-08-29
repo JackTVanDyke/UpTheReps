@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExerciseServiceImpl implements ExerciseService {
@@ -23,8 +24,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public Exercise getExerciseById(long exerciseId) {
-        return exerciseDao.findExerciseByExerciseId(exerciseId);
+    public Optional<Exercise> getExerciseById(long exerciseId) {
+        return exerciseDao.findById(exerciseId);
     }
 
     @Override

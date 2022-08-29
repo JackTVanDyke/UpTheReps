@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/workouts")
@@ -21,22 +22,22 @@ public class WorkoutController {
     }
 
     @GetMapping("/{workoutId}")
-    public ResponseEntity<Workout> getWorkoutById(@PathVariable String workoutId) {
+    public ResponseEntity<Optional<Workout>> getWorkoutById(@PathVariable String workoutId) {
         return ResponseEntity.ok().body(workoutService.getWorkoutById(Long.parseLong(workoutId)));
     }
 
     @GetMapping("/{userId}/{name}")
-    public ResponseEntity<Workout> getWorkoutByNameAndUserId(@PathVariable String workoutName, @PathVariable String userId) {
+    public ResponseEntity<Optional<Workout>> getWorkoutByNameAndUserId(@PathVariable String workoutName, @PathVariable String userId) {
         return ResponseEntity.ok().body(workoutService.getWorkoutByNameAndUserId(workoutName, Long.parseLong(userId)));
     }
 
     @GetMapping("/{userId}/{date}")
-    public ResponseEntity<Workout> getWorkoutByDateAndUserId(@PathVariable String workoutDate, @PathVariable String userId) {
+    public ResponseEntity<Optional<Workout>> getWorkoutByDateAndUserId(@PathVariable String workoutDate, @PathVariable String userId) {
         return ResponseEntity.ok().body(workoutService.getWorkoutByNameAndUserId(workoutDate, Long.parseLong(userId)));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Workout>> getWorkoutsByUserId(@PathVariable String userId) {
+    public ResponseEntity<List<Optional<Workout>>> getWorkoutsByUserId(@PathVariable String userId) {
         return ResponseEntity.ok().body(workoutService.getWorkoutsByUserId(Long.parseLong(userId)));
     }
 
