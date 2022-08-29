@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WorkoutDao extends JpaRepository<Workout, Long> {
-    Workout findWorkoutByNameAndUserUserId(String name, long userId);
-    Workout findWorkoutByDateAndUserUserId(Date date, long userId);
-    Workout findWorkoutByWorkoutId(long workoutId);
-    List<Workout> findWorkoutsByUserUserId(long userId);
+    Optional<Workout> findWorkoutByNameAndUserUserId(String name, long userId);
+    Optional<Workout> findWorkoutByDateAndUserUserId(Date date, long userId);
+    List<Optional<Workout>> findWorkoutsByUserUserId(long userId);
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/exercises")
@@ -25,7 +26,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
-    public ResponseEntity<Exercise> getExerciseById(@PathVariable String exerciseId) {
+    public ResponseEntity<Optional<Exercise>> getExerciseById(@PathVariable String exerciseId) {
         return ResponseEntity.ok().body(exerciseService.getExerciseById(Long.parseLong(exerciseId)));
     }
 

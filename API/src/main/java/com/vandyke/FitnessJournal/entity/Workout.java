@@ -21,15 +21,14 @@ public class Workout {
     @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exercise> exerciseList;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
     public Workout() {
     }
 
-    public Workout(long workoutId, String name, Date date, List<Exercise> exerciseList, User user) {
-        this.workoutId = workoutId;
+    public Workout(String name, Date date, List<Exercise> exerciseList, User user) {
         this.name = name;
         this.date = date;
         this.exerciseList = exerciseList;
