@@ -60,13 +60,7 @@ public class NewUserRequest {
     }
 
     public boolean validateRequest() {
-        if(!email.matches("[a-zA-Z\\d._-]+@.+\\..+") ||
-                !password.matches(
-                "(?=.+[a-z])(?=.+[A-Z])(?=.+\\d)([a-zA-Z\\d]|[`~!@#$%^&*()_+-='\";:,<.>\\/?]){8,32}"
-        ) || "".equals(firstName) || "".equals(lastName)) {
-            return false;
-        }
-        return true;
+        return email.matches("^(.+)@(.+)$") && !"".equals(firstName) && !"".equals(lastName);
     }
 
 }

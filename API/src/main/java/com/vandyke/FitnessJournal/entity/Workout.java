@@ -22,7 +22,7 @@ public class Workout {
     private List<Exercise> exerciseList;
 
     @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
+    @JoinColumn(name = "userId", referencedColumnName = "user_id", nullable = false)
     private User user;
 
     public Workout() {

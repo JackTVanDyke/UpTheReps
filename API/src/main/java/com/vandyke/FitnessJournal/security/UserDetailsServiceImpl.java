@@ -7,7 +7,6 @@ import com.vandyke.FitnessJournal.entity.User;
 import com.vandyke.FitnessJournal.enums.Roles;
 import com.vandyke.FitnessJournal.service.ConfTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,10 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +53,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public String registerUser(NewUserRequest user) {
         if(!user.validateRequest()) throw new IllegalArgumentException("User Data Invalid.");
-        User currUser = userDao.findUserByEmail(user.getEmail()).get();
         boolean userExists = userDao.findUserByEmail(user.getEmail()).isPresent();
-        if (userExists && currUser.isVerified()) throw new IllegalStateException("Email Already Taken");
+        if (userExists && userDao.findUserByEmail(user.getEmail()).get().isVerified()) throw new IllegalStateException("Email Already Taken");
         User newUser = new User(bCryptPasswordEncoder.encode(user.getPassword()), user.getEmail(), user.getFirstName(), user.getLastName(), Roles.USER, false);
         userDao.save(newUser);
         String token = UUID.randomUUID().toString();
