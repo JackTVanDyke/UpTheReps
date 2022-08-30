@@ -62,9 +62,10 @@ const RegisterForm = () => {
 
   const CreateNewUserRequest = {
     email: email,
-    password: passwordConfirm,
+    password: password,
     fName: fName,
     lName: lName,
+    passwordConfirm: passwordConfirm,
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -103,7 +104,10 @@ const RegisterForm = () => {
   return (
     <section className='flex flex-col justify-center items-center h-auto w-full'>
       <div className='bg-brand text-white flex flex-col justify-center items-center p-2 m-2 rounded-xl w-fit'>
-        <p ref={errRef} className={errMsg ? 'text-danger font-bold' : 'absolute left-[100%]'}>
+        <p
+          ref={errRef}
+          className={errMsg ? 'bg-brand-light text-danger font-bold' : 'absolute left-[100%]'}
+        >
           {errMsg}
         </p>
         <h1 className='text-white'>Join Us</h1>

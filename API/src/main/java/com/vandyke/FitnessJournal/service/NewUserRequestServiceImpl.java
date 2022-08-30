@@ -1,6 +1,7 @@
 package com.vandyke.FitnessJournal.service;
 
 import com.vandyke.FitnessJournal.email.EmailSender;
+import com.vandyke.FitnessJournal.email.EmailValidator;
 import com.vandyke.FitnessJournal.email.config.EmailContext;
 import com.vandyke.FitnessJournal.entity.ConfirmationToken;
 import com.vandyke.FitnessJournal.entity.NewUserRequest;
@@ -16,19 +17,23 @@ public class NewUserRequestServiceImpl implements NewUserRequestService {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
+    private final EmailValidator emailValidator;
     private final ConfTokenService confTokenService;
     private final EmailSender emailSender;
 
     @Autowired
-    public NewUserRequestServiceImpl(UserDetailsServiceImpl userDetailsService, UserService userService, ConfTokenService confTokenService, EmailSender emailSender) {
+    public NewUserRequestServiceImpl(UserDetailsServiceImpl userDetailsService, UserService userService, EmailValidator emailValidator, ConfTokenService confTokenService, EmailSender emailSender) {
         this.userDetailsService = userDetailsService;
         this.userService = userService;
+        this.emailValidator = emailValidator;
         this.confTokenService = confTokenService;
         this.emailSender = emailSender;
     }
 
     @Override
     public String register(NewUserRequest newUserRequest) {
+        boolean isValidEmail = emailValidator.test(newUserRequest.getEmail());
+        if(!isValidEmail) throw new IllegalStateException("Email Invalid.");
         EmailContext context = new EmailContext();
         String token = userDetailsService.registerUser(newUserRequest);
         String link = "http://localhost:8080/api/users/register/confirmed?token=" + token;

@@ -44,8 +44,11 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody @Valid NewUserRequest user) throws URISyntaxException {
+        if (!user.validateRequest()) return ResponseEntity.badRequest().body("Bad user data :(");
         newUserRequestService.register(user);
-        return ResponseEntity.created(new URI("/register")).body("");
+        User newUser = new User(passwordEncoder.encode(user.getPassword()), user.getEmail(), user.getFirstName(), user.getLastName(), Roles.USER, false);
+        userService.saveUser(newUser);
+        return ResponseEntity.created(new URI("/api/users/register")).body("");
     }
 
     @GetMapping("/register/confirmed?token={token}")
