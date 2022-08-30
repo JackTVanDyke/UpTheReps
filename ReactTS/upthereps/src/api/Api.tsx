@@ -23,7 +23,6 @@ interface NewUserRequest {
   password: string
   fName: string
   lName: string
-  passwordConfirm: string
 }
 
 const UserRequests = {

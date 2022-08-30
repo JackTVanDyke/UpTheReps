@@ -39,9 +39,9 @@ public class JwtAuthOncePerRequest extends OncePerRequestFilter {
         String email = null;
         String jwtToken = null;
 
-        if("/auth/login".matches(request.getRequestURI())
-                || "/users/register".matches(request.getRequestURI())
-                || request.getRequestURI().contains("/auth/verify")) {
+        if("/api/auth/login".matches(request.getRequestURI())
+                || "/api/users/register".matches(request.getRequestURI())
+                || request.getRequestURI().contains("/api/users/register/**")) {
             filterChain.doFilter(request, response);
             return;
         }
