@@ -8,7 +8,7 @@ const Navbar = () => {
     setNav(!nav)
   }
   return (
-    <header className='w-full h-[100px] bg-brand'>
+    <header className='w-full h-[100px] bg-brand mb-auto'>
       <div className='max-w-auto mx-auto px-4 flex justify-between items-center h-full'>
         <div>
           <h1 className='text-white'>UpTheReps</h1>
@@ -19,13 +19,13 @@ const Navbar = () => {
               <Link to='/'>Home</Link>
             </li>
             <li>
-              <Link to='/'>Register</Link>
+              <Link to='/register'>Register</Link>
             </li>
             <li>
-              <Link to='/'>Login</Link>
+              <Link to='/login'>Login</Link>
             </li>
             <li>
-              <Link to='/'>Dashboard</Link>
+              <Link to='/dashboard'>Dashboard</Link>
             </li>
           </ul>
         </div>

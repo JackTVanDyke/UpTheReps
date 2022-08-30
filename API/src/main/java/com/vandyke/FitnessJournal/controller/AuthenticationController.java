@@ -45,7 +45,10 @@ public class AuthenticationController {
             return ResponseEntity.status(401).body(response);
         }
         User user = userService.getUserByEmail(loginRequest.getEmail());
-        response.setUser(user);
+        response.setUserId(user.getUserId());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole().name());
+        response.setfName(user.getfName());
         response.setJwt(jwtTokenUtil.generateJwtToken(user));
         return ResponseEntity.ok(response);
     }
@@ -60,7 +63,10 @@ public class AuthenticationController {
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             response.setJwt(refreshedToken);
-            response.setUser(user);
+            response.setUserId(user.getUserId());
+            response.setEmail(user.getEmail());
+            response.setRole(user.getRole().name());
+            response.setfName(user.getfName());
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.badRequest().body(null);

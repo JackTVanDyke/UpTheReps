@@ -2,7 +2,7 @@ import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai'
 import { RiDiscordFill } from 'react-icons/ri'
 const Footer = () => {
   return (
-    <footer className='relative bottom-0 left-0 w-full min-h-[100px] bg-brand text-white flex flex-col justify-center items-center'>
+    <footer className='mt-auto relative bottom-0 left-0 w-full min-h-[100px] bg-brand text-white flex flex-col justify-center items-center'>
       <div className='overflow-hidden flex flex-col md:flex-row items-center justify-center text-center'>
         <h1 className='text-white'>UpTheReps</h1>
       </div>

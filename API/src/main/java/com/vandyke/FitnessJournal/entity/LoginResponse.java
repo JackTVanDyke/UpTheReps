@@ -3,14 +3,20 @@ package com.vandyke.FitnessJournal.entity;
 public class LoginResponse {
 
     private String jwt;
-    private User user;
+    private String userEmail;
+    private String role;
+    private String fName;
+    private long userId;
 
-    public LoginResponse() {
+    public LoginResponse(String jwt, String email, String role, String fName, long userId) {
+        this.jwt = jwt;
+        this.userEmail = email;
+        this.role = role;
+        this.fName = fName;
+        this.userId = userId;
     }
 
-    public LoginResponse(String jwt, User user) {
-        this.jwt = jwt;
-        this.user = user;
+    public LoginResponse() {
     }
 
     public String getJwt() {
@@ -21,19 +27,46 @@ public class LoginResponse {
         this.jwt = jwt;
     }
 
-    public User getUser() {
-        return user;
+    public String getEmail() {
+        return userEmail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setEmail(String email) {
+        this.userEmail = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override
     public String toString() {
-        return "NewUserResponse{" +
+        return "LoginResponse{" +
                 "jwt='" + jwt + '\'' +
-                ", user=" + user +
+                ", email='" + userEmail + '\'' +
+                ", role='" + role + '\'' +
+                ", fName='" + fName + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

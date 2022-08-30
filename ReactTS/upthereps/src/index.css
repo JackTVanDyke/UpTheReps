@@ -33,7 +33,7 @@
     }
 
     button {
-        @apply border-2 border-solid border-brand cursor-pointer bg-white p-2 m-2 hover:bg-brand hover:text-white uppercase w-[200px];
+        @apply border-2 border-solid border-brand text-brand cursor-pointer bg-white p-2 m-2 hover:bg-brand hover:text-white uppercase w-[200px];
     }
 
     a {
@@ -41,15 +41,19 @@
     }
 
     form {
-        @apply flex;
+        @apply flex flex-col sm:justify-center justify-evenly flex-grow items-start p-4 m-4 h-auto w-[300px] md:w-[600px];
     }
 
     label {
-        @apply text-2xl p-2 m-2;
+        @apply text-xl p-2 m-2 sm:whitespace-nowrap w-fit sm:w-max;
     }
 
     input {
-        @apply p-2 m-2 rounded-xl border-brand border-2 cursor-pointer;
+        @apply m-2 cursor-pointer text-brand text-xl font-semibold w-fit sm:w-full;
+    }
+
+    input, textarea {
+        @apply bg-white p-2;
     }
 
     hr {
