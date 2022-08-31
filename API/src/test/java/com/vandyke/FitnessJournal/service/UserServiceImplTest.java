@@ -50,12 +50,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void saveUser() {
-        userService.saveUser(new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false));
-        verify(userDao, times(1)).save(new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false));
-    }
-
-    @Test
     void updateUser() {
         User updatedUser = new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false);
         given(userDao.save(updatedUser)).willReturn(updatedUser);

@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // allows authorization
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll() // allows registration
-                .antMatchers("/api/users/register/**").permitAll() // allows verification
+                .antMatchers(HttpMethod.GET, "/api/users/confirmed/*").permitAll() // allows verification
                 .antMatchers("/api/**").hasAnyRole("ADMIN", "USER") // secures all rest api urls
                 .anyRequest().authenticated();
 

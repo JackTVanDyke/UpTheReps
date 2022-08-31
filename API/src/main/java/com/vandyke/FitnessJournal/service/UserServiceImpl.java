@@ -5,8 +5,6 @@ import com.vandyke.FitnessJournal.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -27,11 +25,6 @@ public class UserServiceImpl implements UserService{
         return userDao.findUserByEmail(email).get();
     }
 
-    @Override
-    public String saveUser(User user) {
-        userDao.save(user);
-        return "User registered.";
-    }
 
     @Override
     public String updateUser(User user) {

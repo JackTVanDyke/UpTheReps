@@ -52,17 +52,17 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link onClick={handleNav} to='/'>
+              <Link onClick={handleNav} to='/register'>
                 Register
               </Link>
             </li>
             <li>
-              <Link onClick={handleNav} to='/'>
+              <Link onClick={handleNav} to='/login'>
                 Login
               </Link>
             </li>
             <li>
-              <Link onClick={handleNav} to='/'>
+              <Link onClick={handleNav} to='/dashboard'>
                 Dashboard
               </Link>
             </li>

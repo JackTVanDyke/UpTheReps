@@ -63,8 +63,8 @@ const RegisterForm = () => {
   const CreateNewUserRequest = {
     email: email,
     password: passwordConfirm,
-    fName: fName,
-    lName: lName,
+    firstName: fName,
+    lastName: lName,
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -50,16 +50,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .authorities(roles).disabled(!user.isVerified()).build();
         return userDetails;
     }
-
-    public String registerUser(NewUserRequest user) {
-        if(!user.validateRequest()) throw new IllegalArgumentException("User Data Invalid.");
-        boolean userExists = userDao.findUserByEmail(user.getEmail()).isPresent();
-        if (userExists && userDao.findUserByEmail(user.getEmail()).get().isVerified()) throw new IllegalStateException("Email Already Taken");
-        User newUser = new User(bCryptPasswordEncoder.encode(user.getPassword()), user.getEmail(), user.getFirstName(), user.getLastName(), Roles.USER, false);
-        userDao.save(newUser);
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusHours(1), newUser);
-        confTokenService.saveConfirmationToken(confirmationToken);
-        return token;
-    }
 }

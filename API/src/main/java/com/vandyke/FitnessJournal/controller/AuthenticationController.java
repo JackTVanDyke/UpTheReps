@@ -3,8 +3,6 @@ package com.vandyke.FitnessJournal.controller;
 import com.vandyke.FitnessJournal.entity.LoginRequest;
 import com.vandyke.FitnessJournal.entity.LoginResponse;
 import com.vandyke.FitnessJournal.entity.User;
-import com.vandyke.FitnessJournal.security.UserDetailsServiceImpl;
-import com.vandyke.FitnessJournal.service.NewUserRequestService;
 import com.vandyke.FitnessJournal.service.UserService;
 import com.vandyke.FitnessJournal.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +20,16 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserDetailsServiceImpl userDetailsService;
+
     private final UserService userService;
-    private final NewUserRequestService newUserRequestService;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserDetailsServiceImpl userDetailsService, UserService userService, NewUserRequestService newUserRequestService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,  UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userDetailsService = userDetailsService;
+
         this.userService = userService;
-        this.newUserRequestService = newUserRequestService;
+
     }
 
     @PostMapping("/login")

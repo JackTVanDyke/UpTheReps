@@ -10,7 +10,7 @@ public class Exercise {
     private long exerciseId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "workoutId", referencedColumnName = "workout_id")
+    @JoinColumn(name = "workoutId", referencedColumnName = "workoutid")
     private Workout workout;
 
     @Column(nullable = false)

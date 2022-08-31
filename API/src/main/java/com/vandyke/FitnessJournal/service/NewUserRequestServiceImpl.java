@@ -1,54 +1,63 @@
 package com.vandyke.FitnessJournal.service;
 
+import com.vandyke.FitnessJournal.dao.UserDao;
 import com.vandyke.FitnessJournal.email.EmailSender;
 import com.vandyke.FitnessJournal.email.config.EmailContext;
 import com.vandyke.FitnessJournal.entity.ConfirmationToken;
-import com.vandyke.FitnessJournal.entity.NewUserRequest;
-import com.vandyke.FitnessJournal.security.UserDetailsServiceImpl;
+import com.vandyke.FitnessJournal.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class NewUserRequestServiceImpl implements NewUserRequestService {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final UserService userService;
     private final ConfTokenService confTokenService;
     private final EmailSender emailSender;
+    private final String from;
+    private final UserDao userDao;
 
     @Autowired
-    public NewUserRequestServiceImpl(UserDetailsServiceImpl userDetailsService, UserService userService, ConfTokenService confTokenService, EmailSender emailSender) {
-        this.userDetailsService = userDetailsService;
+    public NewUserRequestServiceImpl(UserService userService, ConfTokenService confTokenService, EmailSender emailSender, @Value("${spring.mail.username}") String from, UserDao userDao) {
+
         this.userService = userService;
         this.confTokenService = confTokenService;
         this.emailSender = emailSender;
+        this.from = from;
+        this.userDao = userDao;
     }
 
     @Override
-    public String register(NewUserRequest newUserRequest) {
+    public String saveUser(User user) {
+        userDao.save(user);
+        new Thread(() -> {
+            try {
+                register(user);
+            } catch (MessagingException e) {
+                System.err.println(e.getMessage());
+            }
+        }).start();
+        return "User registered.";
+    }
+
+    @Override
+    public String register(User user) throws MessagingException {
         EmailContext context = new EmailContext();
-        String token = userDetailsService.registerUser(newUserRequest);
-        String link = "http://localhost:8080/api/users/register/confirmed?token=" + token;
+        String token = UUID.randomUUID().toString();
+        String link = "http://localhost:8080/api/users/confirmed/" + token;
         context.setToken(token);
         context.setLink(link);
-        context.setTo(newUserRequest.getEmail());
+        context.setTo(user.getEmail());
+        context.setFrom(from);
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(30), user);
+        confTokenService.saveConfirmationToken(confirmationToken);
         emailSender.send(context);
         return "Verification email sent.";
-    }
-
-    @Override
-    @Transactional
-    public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confTokenService.
-                getConfirmationToken(token).orElseThrow(() -> new IllegalStateException("Token Not Found."));
-        if (confirmationToken.getConfirmedAt() != null) throw new IllegalStateException("Email Already Confirmed.");
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-        if (expiredAt.isBefore(LocalDateTime.now())) throw new IllegalStateException("Token Expired.");
-        confTokenService.setConfirmedAt(token);
-        userService.getUserByEmail(confirmationToken.getUser().getEmail()).setVerified(true);
-        return "Token Confirmed.";
     }
 }

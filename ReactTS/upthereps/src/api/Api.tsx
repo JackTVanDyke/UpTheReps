@@ -21,8 +21,8 @@ const instance = axios.create({
 interface NewUserRequest {
   email: string
   password: string
-  fName: string
-  lName: string
+  firstName: string
+  lastName: string
 }
 
 const UserRequests = {

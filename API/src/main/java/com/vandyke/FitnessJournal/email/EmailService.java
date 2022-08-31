@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
 
 
 @Service
@@ -30,18 +30,18 @@ public class EmailService implements EmailSender {
     }
 
     @Override
-    @Async
     public void send(EmailContext emailContext) {
         try {
-            Context context = new Context();
+            final Context context = new Context();
             context.setVariables(emailContext.getContext());
+            context.setVariable("link", emailContext.getLink());
             String emailContent = template.process("emailTemplate.html", context);
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             helper.setText(emailContent, true);
             helper.setTo(emailContext.getTo());
-            helper.setSubject("Please Confirm Your Email.");
-            helper.setFrom("j.vandyket@gmail.com");
+            helper.setSubject("Confirm Your Email To Get Started");
+            helper.setFrom(emailContext.getFrom());
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Failed To Send Email.", e);

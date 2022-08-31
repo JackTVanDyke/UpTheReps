@@ -41,7 +41,7 @@ public class JwtAuthOncePerRequest extends OncePerRequestFilter {
 
         if("/api/auth/login".matches(request.getRequestURI())
                 || "/api/users/register".matches(request.getRequestURI())
-                || request.getRequestURI().contains("/api/users/register/**")) {
+                || request.getRequestURI().contains("/api/users/register/")) {
             filterChain.doFilter(request, response);
             return;
         }
