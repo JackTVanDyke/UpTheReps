@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios, { AxiosError } from 'axios'
 import { useRef, useState, useEffect, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Auths } from '../api/Api'
-import { GlobalStateInterface, useGlobalState } from '../context/GlobalStateProvider'
+import { useGlobalState } from '../context/GlobalStateProvider'
 const LoginForm = () => {
-  const { setState } = useGlobalState()
+  const { state, setState } = useGlobalState()
   const navigate = useNavigate()
 
   const emailRef = useRef<HTMLInputElement>(null)
@@ -30,28 +31,30 @@ const LoginForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await Auths.login(LoginRequest)
-      .then((response: GlobalStateInterface) => {
-        const jwt: string = response?.jwt
-        const role: string = response?.role
-        const fName: string = response?.fName
-        const userEmail: string = response?.userEmail
-        const userId: number = response?.userId
+      .then((response) => {
+        const jwt: string = JSON.stringify(response.jwt)
+        const role: string = JSON.stringify(response.role)
+        const fName: string = JSON.stringify(response.fName)
+        const userEmail: string = JSON.stringify(response.email)
+        const userId: string = JSON.stringify(response.userId)
         setState({ jwt, role, fName, userEmail, userId })
+        console.log(response)
         setEmail('')
         setPassword('')
         navigate('/dashboard')
       })
-      .catch((err: AxiosError) => {
+      .catch((err: Error | AxiosError) => {
         if (axios.isAxiosError(err)) {
-          if (!err?.response) {
-            setErrMsg('No Server Response')
+          if (err.response?.status === 403) {
+            setErrMsg('No Account Found')
           } else if (err.response?.status === 400) {
-            setErrMsg('Missing Username or Password')
+            setErrMsg('Missing Email or Password')
           } else if (err.response?.status === 401) {
-            setErrMsg('Unauthorized')
+            setErrMsg('Wrong Email Or Password')
           }
         } else {
-          setErrMsg('Login Failed')
+          console.log(err)
+          setErrMsg('Sign In Failed')
         }
         if (errRef.current) errRef.current.focus()
       })

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -52,12 +55,14 @@ public class JwtTokenUtil {
 
     public String generateJwtToken(User user) {
         LocalDateTime issued = LocalDateTime.now();
-        LocalDateTime expires = issued.plusHours(1);
+        LocalDateTime expires = issued.plusHours(8);
+        byte[] keyBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signatureKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(Date.from(issued.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(Date.from(expires.atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.ES512, secret)
+                .signWith(signatureKey)
                 .compact();
     }
 
@@ -67,13 +72,13 @@ public class JwtTokenUtil {
 
     public String refreshToken(String token) {
         final LocalDateTime issued = LocalDateTime.now();
-        final LocalDateTime expires = issued.plusMinutes(30);
-
+        final LocalDateTime expires = issued.plusHours(1);
+        byte[] keyBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signatureKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
         final Claims claims = getAllClaimsFromToken(token);
         claims.setIssuedAt(Date.from(issued.atZone(ZoneId.systemDefault()).toInstant()));
         claims.setExpiration(Date.from(expires.atZone(ZoneId.systemDefault()).toInstant()));
-
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+        return Jwts.builder().setClaims(claims).signWith(signatureKey).compact();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

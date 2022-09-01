@@ -1,40 +1,28 @@
 package com.vandyke.FitnessJournal.security;
 
 import com.vandyke.FitnessJournal.dao.UserDao;
-import com.vandyke.FitnessJournal.entity.ConfirmationToken;
-import com.vandyke.FitnessJournal.entity.NewUserRequest;
 import com.vandyke.FitnessJournal.entity.User;
-import com.vandyke.FitnessJournal.enums.Roles;
-import com.vandyke.FitnessJournal.service.ConfTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @EnableWebSecurity
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserDao userDao;
-    private final ConfTokenService confTokenService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserDetailsServiceImpl(UserDao userDao, ConfTokenService confTokenService, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserDetailsServiceImpl(UserDao userDao) {
         this.userDao = userDao;
-        this.confTokenService = confTokenService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override

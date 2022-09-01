@@ -1,9 +1,8 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
 
 export interface GlobalStateInterface {
-  userId: number
+  userId: string
   fName: string
-  lName: string
   userEmail: string
   role: string
   jwt: string

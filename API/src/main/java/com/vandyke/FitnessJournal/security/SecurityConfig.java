@@ -42,16 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtUnauthorizedResponse)
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // allows authorization
+                .authorizeRequests().antMatchers("/api/users/auth/**").permitAll() // allows authorization
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll() // allows registration
-                .antMatchers(HttpMethod.GET, "/api/users/confirmed/*").permitAll() // allows verification
+                .antMatchers(HttpMethod.GET, "/api/users/confirmed/**").permitAll() // allows verification
                 .antMatchers("/api/**").hasAnyRole("ADMIN", "USER") // secures all rest api urls
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtAuthOncePerRequest, UsernamePasswordAuthenticationFilter.class);
     }

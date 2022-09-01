@@ -1,22 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from 'axios'
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: 'http://localhost:8080',
-  timeout: 15000,
+  timeout: 5000,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 })
-
-// const authInstance = axios.create({
-//   baseURL: 'http://localhost:8080',
-//   timeout: 15000,
-//   headers: {
-//     'Content-Type': 'application/json',
-//     Authorization: `Bearer ${}`,
-//   },
-//   withCredentials: true,
-// })
 
 interface NewUserRequest {
   email: string
@@ -28,7 +19,6 @@ interface NewUserRequest {
 const UserRequests = {
   post: (url: string, body: NewUserRequest) =>
     instance.post<NewUserRequest>(url, body).then((response) => {
-      console.log(response.data)
       return response.data
     }),
 }
@@ -41,7 +31,7 @@ export const Users = {
 const AuthRequests = {
   post: (url: string, body: any) =>
     instance.post<any>(url, body).then((response: AxiosResponse<any>) => {
-      return response
+      return response.data
     }),
 }
 

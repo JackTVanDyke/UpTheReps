@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +22,14 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-
+    private final UserDetailsService userDetailsService;
     private final UserService userService;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,  UserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
-
+        this.userDetailsService = userDetailsService;
         this.userService = userService;
 
     }
@@ -35,13 +37,16 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         LoginResponse response = new LoginResponse();
+        UserDetails userDetails;
+        User user;
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
                     (loginRequest.getEmail(), loginRequest.getPassword()));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body(response);
         }
-        User user = userService.getUserByEmail(loginRequest.getEmail());
+        userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+        user = userService.getUserByEmail(userDetails.getUsername());
         response.setUserId(user.getUserId());
         response.setEmail(user.getEmail());
         response.setRole(user.getRole().name());
@@ -53,7 +58,7 @@ public class AuthenticationController {
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshJwtToken(HttpServletRequest request) {
         LoginResponse response = new LoginResponse();
-        String jwtToken = request.getHeader("api/users/auth");
+        String jwtToken = request.getHeader("Authorization");
         final String token = jwtToken.substring(7);
         String email = jwtTokenUtil.getEmailFromToken(token);
         User user = userService.getUserByEmail(email);
