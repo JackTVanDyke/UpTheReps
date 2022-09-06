@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import axios, { AxiosError } from 'axios'
 import { useRef, useState, useEffect, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Auths } from '../api/Api'
-import { useGlobalState } from '../context/GlobalStateProvider'
+import { useDispatch } from 'react-redux'
+import { setUserCredentials, User } from '../features/userSlice'
+import { useLoginMutation } from '../features/userApiSlice'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 const LoginForm = () => {
-  const { state, setState } = useGlobalState()
   const navigate = useNavigate()
-
   const emailRef = useRef<HTMLInputElement>(null)
   const errRef = useRef<HTMLParagraphElement>(null)
-
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errMsg, setErrMsg] = useState('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [errMsg, setErrMsg] = useState<string>('')
+  const [login, { isLoading }] = useLoginMutation()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (emailRef.current) emailRef.current.focus()
@@ -23,44 +23,32 @@ const LoginForm = () => {
     setErrMsg('')
   }, [email, password])
 
-  const LoginRequest = {
-    email: email,
-    password: password,
-  }
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await Auths.login(LoginRequest)
-      .then((response) => {
-        const jwt: string = JSON.stringify(response.jwt)
-        const role: string = JSON.stringify(response.role)
-        const fName: string = JSON.stringify(response.fName)
-        const userEmail: string = JSON.stringify(response.email)
-        const userId: string = JSON.stringify(response.userId)
-        setState({ jwt, role, fName, userEmail, userId })
-        console.log(response)
-        setEmail('')
-        setPassword('')
-        navigate('/dashboard')
-      })
-      .catch((err: Error | AxiosError) => {
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 403) {
-            setErrMsg('No Account Found')
-          } else if (err.response?.status === 400) {
-            setErrMsg('Missing Email or Password')
-          } else if (err.response?.status === 401) {
-            setErrMsg('Wrong Email Or Password')
-          }
-        } else {
-          console.log(err)
-          setErrMsg('Sign In Failed')
-        }
-        if (errRef.current) errRef.current.focus()
-      })
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const userData: User = await login({ email: email, password: password }).unwrap()
+      dispatch(setUserCredentials({ ...userData }))
+      navigate('/dashboard')
+    } catch (err: FetchBaseQueryError | unknown) {
+      if (!(err as FetchBaseQueryError)?.status) {
+        setErrMsg('No Server Response')
+      } else if ((err as FetchBaseQueryError).status === 400) {
+        setErrMsg('Missing Username or Password')
+      } else if ((err as FetchBaseQueryError).status === 401) {
+        setErrMsg('Unauthorized')
+      } else {
+        setErrMsg('Login Failed')
+      }
+    }
+    if (errRef.current) {
+      errRef.current.focus()
+    }
   }
 
-  return (
+  const content = isLoading ? (
+    <h1>Loading...</h1>
+  ) : (
     <section className='flex flex-col justify-center items-center h-full w-full'>
       <div className='bg-brand text-white flex flex-col justify-center items-center p-2 m-2 rounded-xl h-fit w-fit'>
         <p
@@ -95,6 +83,7 @@ const LoginForm = () => {
       </div>
     </section>
   )
+  return content
 }
 
 export default LoginForm

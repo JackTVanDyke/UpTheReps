@@ -2,6 +2,7 @@ package com.vandyke.FitnessJournal.controller;
 
 import com.vandyke.FitnessJournal.entity.Exercise;
 import com.vandyke.FitnessJournal.service.ExerciseService;
+import com.vandyke.FitnessJournal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,28 +15,31 @@ import java.util.Optional;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
+    private final UserService userService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, UserService userService) {
         this.exerciseService = exerciseService;
+        this.userService = userService;
     }
 
-    @GetMapping("/{workoutId}")
-    public ResponseEntity<List<Exercise>> getExercisesByWorkoutId(@PathVariable String workoutId) {
-        return ResponseEntity.ok().body(exerciseService.getExercisesByWorkoutId(Long.parseLong(workoutId)));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Exercise>> getExercisesByUserId(@PathVariable String userId) {
+        return ResponseEntity.ok().body(exerciseService.getExercisesByUserId(Long.parseLong(userId)));
     }
 
-    @GetMapping("/{exerciseId}")
+    @GetMapping("/exercise/{exerciseId}")
     public ResponseEntity<Optional<Exercise>> getExerciseById(@PathVariable String exerciseId) {
         return ResponseEntity.ok().body(exerciseService.getExerciseById(Long.parseLong(exerciseId)));
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<String> saveExercise(@RequestBody Exercise exercise) {
+    @PostMapping("/{userId}/save")
+    public ResponseEntity<String> saveExercise(@RequestBody Exercise exercise, @PathVariable String userId) {
+        exercise.setUser(userService.getUserById(Long.parseLong(userId)));
         return ResponseEntity.ok().body(exerciseService.saveExercise(exercise));
     }
 
-    @PutMapping("/save")
+    @PutMapping("/update")
     public ResponseEntity<String> updateExercise(@RequestBody Exercise exercise) {
         return ResponseEntity.ok().body(exerciseService.saveExercise(exercise));
     }

@@ -6,6 +6,7 @@ import com.vandyke.FitnessJournal.enums.Roles;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -26,10 +27,12 @@ public class User {
     private Roles role;
     @Column(nullable = false)
     private boolean verified;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Workout workout;
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
+    private Set<Exercise> exerciseList;
 
-    public User(long userId, String password, String fName, String lName, String email, Roles role, boolean verified, Workout workout) {
+    public User(long userId, String password, String fName, String lName, String email, Roles role, boolean verified, Workout workout, Set<Exercise> exerciseList) {
         this.userId = userId;
         this.password = password;
         this.fName = fName;
@@ -38,6 +41,7 @@ public class User {
         this.role = role;
         this.verified = verified;
         this.workout = workout;
+        this.exerciseList = exerciseList;
     }
 
     public User(String password, String fName, String lName, String email, Roles role, boolean verified) {
@@ -47,6 +51,10 @@ public class User {
         this.email = email;
         this.role = role;
         this.verified = verified;
+    }
+
+    public User(long userId) {
+        this.userId = userId;
     }
 
     public User() {
@@ -112,6 +120,14 @@ public class User {
         this.role = role;
     }
 
+    public Set<Exercise> getExerciseList() {
+        return exerciseList;
+    }
+
+    public void setExerciseList(Set<Exercise> exerciseList) {
+        this.exerciseList = exerciseList;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -120,8 +136,10 @@ public class User {
                 ", fName='" + fName + '\'' +
                 ", lName='" + lName + '\'' +
                 ", email='" + email + '\'' +
+                ", role=" + role +
                 ", verified=" + verified +
                 ", workout=" + workout +
+                ", exerciseList=" + exerciseList +
                 '}';
     }
 

@@ -46,7 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/users/auth/**").permitAll() // allows authorization
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll() // allows registration
                 .antMatchers(HttpMethod.GET, "/api/users/confirmed/**").permitAll() // allows verification
-                .antMatchers("/api/**").hasAnyRole("ADMIN", "USER") // secures all rest api urls
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -1,16 +1,17 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useGlobalState } from '../context/GlobalStateProvider'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../features/userSlice'
 
 const ProtectedRoute = ({ allowedRoles }: { allowedRoles: string }) => {
   const location = useLocation()
-  const { state } = useGlobalState()
-  const userRole: string = JSON.parse(state?.role as string) as string
-  const accessToken: string = JSON.parse(state?.jwt as string) as string
+  const user = useSelector(selectCurrentUser)
 
-  return allowedRoles.includes(userRole) ? (
-    <Outlet />
-  ) : accessToken ? (
-    <Navigate to='/unauthorized' state={{ from: location }} replace />
+  return user.jwt ? (
+    allowedRoles.includes(user.role) ? (
+      <Outlet />
+    ) : (
+      <Navigate to='/unauthorized' state={{ from: location }} replace />
+    )
   ) : (
     <Navigate to='/login' state={{ from: location }} replace />
   )

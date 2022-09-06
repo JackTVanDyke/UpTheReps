@@ -7,6 +7,18 @@ const Navbar = () => {
   const handleNav = () => {
     setNav(!nav)
   }
+  // const [status, setStatus] = useState<boolean>(false)
+  // useEffect(() => {
+  //   const handleStatus = () => {
+  //     const userRole: string = JSON.parse(state?.role as string) as string
+  //     if (userRole === 'USER' || 'ADMIN') {
+  //       setStatus(true)
+  //     } else {
+  //       setStatus(false)
+  //     }
+  //   }
+  //   handleStatus
+  // }, [state])
   return (
     <header className='w-full h-[100px] bg-brand mb-auto'>
       <div className='max-w-auto mx-auto px-4 flex justify-between items-center h-full'>
@@ -18,12 +30,8 @@ const Navbar = () => {
             <li>
               <Link to='/'>Home</Link>
             </li>
-            <li>
-              <Link to='/register'>Register</Link>
-            </li>
-            <li>
-              <Link to='/login'>Login</Link>
-            </li>
+            <li>{status ? 'hidden' : <Link to='/register'>Register</Link>}</li>
+            <li>{status ? <Link to='/logout'>Logout</Link> : <Link to='/login'>Login</Link>}</li>
             <li>
               <Link to='/dashboard'>Dashboard</Link>
             </li>

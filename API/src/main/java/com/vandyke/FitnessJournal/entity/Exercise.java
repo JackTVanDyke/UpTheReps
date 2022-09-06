@@ -1,5 +1,7 @@
 package com.vandyke.FitnessJournal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,10 +10,6 @@ public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long exerciseId;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "workoutId", referencedColumnName = "workoutid")
-    private Workout workout;
 
     @Column(nullable = false)
     private String name;
@@ -28,16 +26,22 @@ public class Exercise {
     @Column(nullable = false)
     private String bodyPart;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId", referencedColumnName = "userid", nullable = false)
+    @JsonIgnore
+    private User user;
+
     public Exercise() {
     }
 
-    public Exercise(long exerciseId, String name, int sets, int reps, int weight, String bodyPart) {
+    public Exercise(long exerciseId, String name, int sets, int reps, int weight, String bodyPart, User user) {
         this.name = name;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
         this.bodyPart = bodyPart;
         this.exerciseId = exerciseId;
+        this.user = user;
     }
 
     public long getExerciseId() {
@@ -82,6 +86,14 @@ public class Exercise {
 
     public void setBodyPart(String bodyPart) {
         this.bodyPart = bodyPart;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

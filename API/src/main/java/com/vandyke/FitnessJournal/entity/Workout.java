@@ -1,8 +1,11 @@
 package com.vandyke.FitnessJournal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Workout {
@@ -18,17 +21,26 @@ public class Workout {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Exercise> exerciseList;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Exercise> exerciseList;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", referencedColumnName = "userid", nullable = false)
+    @JsonIgnore
     private User user;
 
     public Workout() {
     }
 
-    public Workout(String name, Date date, List<Exercise> exerciseList, User user) {
+    public Workout(long workoutId, String name, Date date, Set<Exercise> exerciseList, User user) {
+        this.workoutId = workoutId;
+        this.name = name;
+        this.date = date;
+        this.exerciseList = exerciseList;
+        this.user = user;
+    }
+
+    public Workout(String name, Date date, Set<Exercise> exerciseList, User user) {
         this.name = name;
         this.date = date;
         this.exerciseList = exerciseList;
@@ -38,6 +50,8 @@ public class Workout {
     public long getWorkoutId() {
         return workoutId;
     }
+
+    public void setWorkoutId(long workoutId) { this.workoutId = workoutId; }
 
     public String getName() {
         return name;
@@ -55,11 +69,11 @@ public class Workout {
         this.date = date;
     }
 
-    public List<Exercise> getExerciseList() {
+    public Set<Exercise> getExerciseList() {
         return exerciseList;
     }
 
-    public void setExerciseList(List<Exercise> exerciseList) {
+    public void setExerciseList(Set<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
     }
 

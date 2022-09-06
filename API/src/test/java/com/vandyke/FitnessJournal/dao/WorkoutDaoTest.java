@@ -29,7 +29,7 @@ class WorkoutDaoTest {
         User user = new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false);
         workout.setDate(new Date(2022, 7, 27));
         workout.setName("Pump");
-        workout.setExerciseList(new ArrayList<Exercise>());
+        workout.setExerciseList(new HashSet<Exercise>());
         testWorkout = workout;
         user.setWorkout(testWorkout);
         testWorkout.setUser(user);

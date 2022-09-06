@@ -19,8 +19,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public List<Exercise> getExercisesByWorkoutId(long workoutId) {
-        return exerciseDao.findExercisesByWorkoutWorkoutId(workoutId);
+    public List<Exercise> getExercisesByUserId(long userId) {
+        return exerciseDao.findExercisesByUserUserId(userId);
     }
 
     @Override

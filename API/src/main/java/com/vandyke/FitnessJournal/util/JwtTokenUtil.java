@@ -55,7 +55,7 @@ public class JwtTokenUtil {
 
     public String generateJwtToken(User user) {
         LocalDateTime issued = LocalDateTime.now();
-        LocalDateTime expires = issued.plusHours(8);
+        LocalDateTime expires = issued.plusHours(1);
         byte[] keyBytes = DatatypeConverter.parseBase64Binary(secret);
         Key signatureKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
         return Jwts.builder()
