@@ -5,15 +5,12 @@ import com.vandyke.FitnessJournal.entity.User;
 import com.vandyke.FitnessJournal.entity.Workout;
 import com.vandyke.FitnessJournal.enums.Roles;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -23,26 +20,17 @@ class WorkoutDaoTest {
     private WorkoutDao workoutDao;
     private static Workout testWorkout;
 
-    @BeforeAll
-    static void createWorkout() {
-        Workout workout = new Workout();
-        User user = new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false);
-        workout.setDate(new Date(2022, 7, 27));
-        workout.setName("Pump");
-        workout.setExerciseList(new HashSet<Exercise>());
-        testWorkout = workout;
-        user.setWorkout(testWorkout);
-        testWorkout.setUser(user);
-    }
-
-    @Test
-    void findWorkoutByNameAndUserUserId() {
-        workoutDao.save(testWorkout);
-        Optional<Workout> foundWorkout
-                = workoutDao.findWorkoutByNameAndUserUserId(testWorkout.getName(), testWorkout.getUser().getUserId());
-        assertEquals(foundWorkout.get().getName(), testWorkout.getName());
-    }
-
+//    @BeforeAll
+//    static void createWorkout() {
+//        Workout workout = new Workout();
+//        User user = new User("Test123!", "Test", "Test", "test@test.com", Roles.USER, false);
+//        workout.setDate(new Date(2022, 7, 27));
+//        workout.setName("Pump");
+//        workout.setExerciseList(new HashSet<Exercise>());
+//        testWorkout = workout;
+//        user.setWorkoutList(testWorkout);
+//        testWorkout.setUser(user);
+//    }
 
     //need to add stupid test data I hate these tests
 //    @Test

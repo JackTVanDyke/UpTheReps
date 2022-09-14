@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { FaCheck, FaTimes } from 'react-icons/fa'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users } from '../api/Api'
+import { Users } from '../../api/Api'
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,30}))$/
@@ -67,6 +67,8 @@ const RegisterForm = () => {
     lastName: lName,
   }
 
+  let content
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const v1 = EMAIL_REGEX.test(email)
@@ -83,7 +85,14 @@ const RegisterForm = () => {
         setLName('')
         setPwd('')
         setMatchPwd('')
-        return response
+        content = (
+          <section className='flex flex-col justify-center items-center h-auto w-full'>
+            <div className='bg-brand text-white flex flex-col justify-center items-center p-2 m-2 rounded-xl w-fit'>
+              <h1>Welcome!</h1>
+              <h3>Check your email to verify your account and get started.</h3>
+            </div>
+          </section>
+        )
       })
       .catch((err: AxiosError) => {
         if (axios.isAxiosError(err)) {
@@ -100,7 +109,8 @@ const RegisterForm = () => {
         if (errRef.current) errRef.current.focus()
       })
   }
-  return (
+
+  content = (
     <section className='flex flex-col justify-center items-center h-auto w-full'>
       <div className='bg-brand text-white flex flex-col justify-center items-center p-2 m-2 rounded-xl w-fit'>
         <p ref={errRef} className={errMsg ? 'text-danger font-bold' : 'absolute left-[100%]'}>
@@ -224,6 +234,7 @@ const RegisterForm = () => {
       </div>
     </section>
   )
+  return <div>{content}</div>
 }
 
 export default RegisterForm

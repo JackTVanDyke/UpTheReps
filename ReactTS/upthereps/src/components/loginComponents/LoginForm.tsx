@@ -2,8 +2,8 @@
 import { useRef, useState, useEffect, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { setUserCredentials, User } from '../features/userSlice'
-import { useLoginMutation } from '../features/userApiSlice'
+import { setUserCredentials, User } from '../../features/userSlice'
+import { useLoginMutation } from '../../features/userApiSlice'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 const LoginForm = () => {
   const navigate = useNavigate()
@@ -47,7 +47,12 @@ const LoginForm = () => {
   }
 
   const content = isLoading ? (
-    <h1>Loading...</h1>
+    <section className='h-full w-full flex flex-col flex-center'>
+      <h1 className='self-center'>Welcome Back!</h1>
+      <div className='flex flex-col justify-center items-center'>
+        <h3>You are currently logging in...</h3>
+      </div>
+    </section>
   ) : (
     <section className='flex flex-col justify-center items-center h-full w-full'>
       <div className='bg-brand text-white flex flex-col justify-center items-center p-2 m-2 rounded-xl h-fit w-fit'>

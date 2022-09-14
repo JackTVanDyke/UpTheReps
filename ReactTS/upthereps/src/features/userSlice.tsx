@@ -4,7 +4,7 @@ import type { RootState } from '../app/store'
 export interface User {
   userId: number | null
   fName: string
-  userEmail: string
+  email: string
   role: string
   jwt: string
 }
@@ -17,7 +17,7 @@ const initialState: UserSliceState = {
   user: {
     userId: null,
     fName: '',
-    userEmail: '',
+    email: '',
     role: '',
     jwt: '',
   },
@@ -29,16 +29,16 @@ export const userSlice = createSlice({
   reducers: {
     setUserCredentials: (state, action: PayloadAction<User>) => {
       const {
-        payload: { userId, fName, userEmail, role, jwt },
+        payload: { userId, fName, email, role, jwt },
       } = action
-      state.user = { userId: userId, fName: fName, userEmail: userEmail, role: role, jwt: jwt }
+      state.user = { userId: userId, fName: fName, email: email, role: role, jwt: jwt }
     },
-    logOut: (state) => {
-      state.user = { userId: null, fName: '', userEmail: '', role: '', jwt: '' }
+    logout: (state) => {
+      state.user = { userId: null, fName: '', email: '', role: '', jwt: '' }
     },
   },
 })
 
-export const { setUserCredentials, logOut } = userSlice.actions
+export const { setUserCredentials, logout } = userSlice.actions
 export default userSlice.reducer
 export const selectCurrentUser = (state: RootState) => state.user.user

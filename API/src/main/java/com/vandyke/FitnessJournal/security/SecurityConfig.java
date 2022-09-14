@@ -11,19 +11,24 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthOncePerRequest jwtAuthOncePerRequest;
-    private final JwtUnauthorizedResponse jwtUnauthorizedResponse;
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthOncePerRequest jwtAuthOncePerRequest, JwtUnauthorizedResponse jwtUnauthorizedResponse) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthOncePerRequest jwtAuthOncePerRequest) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthOncePerRequest = jwtAuthOncePerRequest;
-        this.jwtUnauthorizedResponse = jwtUnauthorizedResponse;
     }
 
     @Autowired
@@ -39,18 +44,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+        httpSecurity.cors(withDefaults())
                 .csrf().disable()
-                .exceptionHandling()
-                .and()
                 .authorizeRequests().antMatchers("/api/users/auth/**").permitAll() // allows authorization
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll() // allows registration
                 .antMatchers(HttpMethod.GET, "/api/users/confirmed/**").permitAll() // allows verification
                 .anyRequest().authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtAuthOncePerRequest, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.applyPermitDefaultValues();
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "http://localhost:5000", "http://localhost:*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));        configuration.setAllowCredentials(true);
+        configuration.addAllowedHeader("Authorization");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 
     @Bean

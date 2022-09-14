@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../app/store'
 
 export interface Exercise {
-  id: number | null
-  exercise: string
+  exerciseId: number | null
+  name: string
   sets: string
   reps: string
   weight: string
@@ -18,8 +18,8 @@ interface ExerciseSliceState {
 const initialState: ExerciseSliceState = {
   exercises: [],
   exercise: {
-    id: null,
-    exercise: '',
+    exerciseId: null,
+    name: '',
     sets: '',
     reps: '',
     weight: '',
@@ -33,11 +33,11 @@ export const exerciseSlice = createSlice({
   reducers: {
     addExercise: (state, action: PayloadAction<Exercise>) => {
       const {
-        payload: { exercise, sets, reps, weight, bodyPart },
+        payload: { exerciseId, name, sets, reps, weight, bodyPart },
       } = action
       const newExercise = {
-        id: state.exercises.length + 1,
-        exercise: exercise,
+        exerciseId: exerciseId,
+        name: name,
         sets: sets,
         reps: reps,
         weight: weight,
@@ -46,22 +46,29 @@ export const exerciseSlice = createSlice({
       state.exercises.push(newExercise)
     },
     removeExercise: (state, action: PayloadAction<number>) => {
-      state.exercises = state.exercises.filter(({ id }) => id !== action.payload)
+      state.exercises = state.exercises.filter(({ exerciseId }) => exerciseId !== action.payload)
     },
     editExercise: (state, action: PayloadAction<Exercise>) => {
       const {
-        payload: { id, exercise, sets, reps, weight, bodyPart },
+        payload: { exerciseId, name, sets, reps, weight, bodyPart },
       } = action
       state.exercises = state.exercises.map((singleExercise) =>
-        singleExercise.id === id
-          ? { ...singleExercise, exercise, sets, reps, weight, bodyPart }
+        singleExercise.exerciseId === exerciseId
+          ? { ...singleExercise, name, sets, reps, weight, bodyPart }
           : singleExercise,
       )
+    },
+    addExerciseList: (state, action: PayloadAction<Exercise[]>) => {
+      const num = action.payload.length
+      for (let i = 0; i < num; i++) {
+        const newExercise = action.payload.at(i) as Exercise
+        state.exercises.push(newExercise)
+      }
     },
   },
 })
 
-export const { addExercise, removeExercise, editExercise } = exerciseSlice.actions
+export const { addExercise, removeExercise, editExercise, addExerciseList } = exerciseSlice.actions
 
 export const selectExercises = (state: RootState) => state.exercises.exercises
 

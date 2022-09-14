@@ -39,12 +39,12 @@ public class UserController {
         this.confTokenService = confTokenService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/id/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable String userId) {
         return ResponseEntity.ok().body(userService.getUserById(Long.parseLong(userId)));
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         return ResponseEntity.ok().body(userService.getUserByEmail(email));
     }
@@ -80,7 +80,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.updateUser(user));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         return ResponseEntity.ok().body(userService.deleteUserByID(Integer.parseInt(userId)));
     }

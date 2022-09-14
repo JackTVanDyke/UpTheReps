@@ -1,7 +1,7 @@
-import Mission from '../components/Mission'
-import CTA from '../components/CTA'
-import Hero from '../components/Hero'
-import Process from '../components/Process'
+import Mission from '../components/homeComponents/Mission'
+import CTA from '../components/homeComponents/CTA'
+import Hero from '../components/homeComponents/Hero'
+import Process from '../components/homeComponents/Process'
 
 const Home = () => {
   return (

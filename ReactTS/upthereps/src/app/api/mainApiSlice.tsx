@@ -1,15 +1,15 @@
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setUserCredentials, logOut } from '../../features/userSlice'
+import { setUserCredentials, logout } from '../../features/userSlice'
 import { RootState } from '../store'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8080/',
+  baseUrl: 'http://upthereps-env.eba-thbpe6zu.us-east-1.elasticbeanstalk.com/',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).user.user.jwt
     if (token) {
-      headers.set('authorization', `Bearer ${token}`)
+      headers.set('Authorization', `Bearer ${token}`)
     }
     return headers
   },
@@ -30,7 +30,7 @@ const baseQueryWithReauth = async (
       api.dispatch(setUserCredentials(user))
       result = await baseQuery(args, api, extraOptions)
     } else {
-      api.dispatch(logOut)
+      api.dispatch(logout)
     }
   }
   return result

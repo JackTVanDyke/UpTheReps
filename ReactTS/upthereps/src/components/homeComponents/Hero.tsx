@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import lifter from '../assets/Lifter.jpg'
+import lifter from '../../assets/Lifter.jpg'
 const Hero = () => {
   return (
     <section className='w-screen min-h-[300px] h-fit'>
@@ -10,7 +10,7 @@ const Hero = () => {
             Click the button to join us on the journey to become better.
           </h1>
           <button>
-            <Link to='/'>Join Us</Link>
+            <Link to='/register'>Join Us</Link>
           </button>
         </div>
         <div className='w-full h-fit lg:w-1/2 p-2 m-2 order-first md:order-last'>

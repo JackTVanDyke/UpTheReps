@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,10 +20,15 @@ public class Workout {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "exercises_used",
+            joinColumns = @JoinColumn(name = "workoutId"),
+            inverseJoinColumns = @JoinColumn(name = "exerciseId")
+    )
     private Set<Exercise> exerciseList;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userid", nullable = false)
     @JsonIgnore
     private User user;
@@ -85,6 +89,18 @@ public class Workout {
         this.user = user;
     }
 
+    public void addExercise(Exercise exercise) {
+        this.exerciseList.add(exercise);
+        exercise.getWorkouts().add(this);
+    }
+
+    public void removeExercise(long exerciseId) {
+        Exercise exercise = this.exerciseList.stream().filter(exer -> exer.getExerciseId() == exerciseId).findFirst().orElse(null);
+        if (exercise != null) {
+            this.exerciseList.remove(exercise);
+            exercise.getWorkouts().remove(this);
+        }
+    }
     @Override
     public String toString() {
         return "Workout{" +
@@ -94,5 +110,29 @@ public class Workout {
                 ", exerciseList=" + exerciseList +
                 ", user=" + user +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Workout workout = (Workout) o;
+
+        if (workoutId != workout.workoutId) return false;
+        if (!name.equals(workout.name)) return false;
+        if (!date.equals(workout.date)) return false;
+        if (!exerciseList.equals(workout.exerciseList)) return false;
+        return user.equals(workout.user);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (workoutId ^ (workoutId >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + exerciseList.hashCode();
+        result = 31 * result + user.hashCode();
+        return result;
     }
 }

@@ -8,7 +8,7 @@ const CTA = () => {
         Your best self is just out of reach - click the button to join us on the journey to chase it
       </p>
       <button>
-        <Link to='/'>Join Us</Link>
+        <Link to='/register'>Join Us</Link>
       </button>
     </section>
   )

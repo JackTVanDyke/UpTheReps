@@ -27,12 +27,12 @@ public class User {
     private Roles role;
     @Column(nullable = false)
     private boolean verified;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE, orphanRemoval = true)
-    private Workout workout;
-    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Workout> workoutList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Exercise> exerciseList;
 
-    public User(long userId, String password, String fName, String lName, String email, Roles role, boolean verified, Workout workout, Set<Exercise> exerciseList) {
+    public User(long userId, String password, String fName, String lName, String email, Roles role, boolean verified, Set<Workout> workoutList, Set<Exercise> exerciseList) {
         this.userId = userId;
         this.password = password;
         this.fName = fName;
@@ -40,7 +40,7 @@ public class User {
         this.email = email;
         this.role = role;
         this.verified = verified;
-        this.workout = workout;
+        this.workoutList = workoutList;
         this.exerciseList = exerciseList;
     }
 
@@ -96,12 +96,12 @@ public class User {
         this.email = email;
     }
 
-    public Workout getWorkout() {
-        return workout;
+    public Set<Workout> getWorkoutList() {
+        return workoutList;
     }
 
-    public void setWorkout(Workout workout) {
-        this.workout = workout;
+    public void setWorkoutList(Set<Workout> workoutList) {
+        this.workoutList = workoutList;
     }
 
     public boolean isVerified() {
@@ -138,7 +138,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 ", verified=" + verified +
-                ", workout=" + workout +
+                ", workoutList=" + workoutList +
                 ", exerciseList=" + exerciseList +
                 '}';
     }

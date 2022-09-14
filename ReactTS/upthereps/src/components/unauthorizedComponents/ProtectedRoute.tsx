@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../features/userSlice'
+import { selectCurrentUser } from '../../features/userSlice'
 
 const ProtectedRoute = ({ allowedRoles }: { allowedRoles: string }) => {
   const location = useLocation()

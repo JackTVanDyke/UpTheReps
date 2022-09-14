@@ -61,4 +61,36 @@
         @apply border-b w-10 my-4;
     }
 
+    table {
+        @apply w-full text-sm text-left text-brand bg-white table-fixed flex flex-col min-w-[640px]
+        }
+
+    thead {
+        @apply w-full text-2xl text-white bg-brand uppercase flex flex-row items-center justify-between
+    }
+
+    tbody {
+        @apply w-full flex flex-col items-stretch
+    }
+
+    tr {
+        @apply border-b border-b-brand hover:bg-brand-light w-full flex flex-row items-center justify-between text-left
+    }
+
+    th {
+        @apply font-bold text-xl
+    }
+
+    td {
+        @apply text-lg
+    }
+
+    td, th {
+        @apply py-1 my-1 w-1/3 whitespace-nowrap overflow-visible overflow-ellipsis
+    }
+
+    td > input, th > input {
+        @apply mx-1 m-0 p-1 cursor-pointer text-brand text-lg font-semibold w-full
+    }
 }
+

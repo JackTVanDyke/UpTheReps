@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,8 @@ public class JwtTokenUtil {
     private String secret;
 
     public String getEmailFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return claims.getSubject();
     }
 
     public Date getIssuedAtDateFromToken(String token) {
@@ -31,7 +33,8 @@ public class JwtTokenUtil {
     }
 
     public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return claims.getExpiration();
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -54,14 +57,11 @@ public class JwtTokenUtil {
     }
 
     public String generateJwtToken(User user) {
-        LocalDateTime issued = LocalDateTime.now();
-        LocalDateTime expires = issued.plusHours(1);
-        byte[] keyBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signatureKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+        Key signatureKey = new SecretKeySpec(DatatypeConverter.parseBase64Binary(secret), SignatureAlgorithm.HS256.getJcaName());
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .setIssuedAt(Date.from(issued.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(expires.atZone(ZoneId.systemDefault()).toInstant()))
+                .setIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(LocalDateTime.now().plusMinutes(480).atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(signatureKey)
                 .compact();
     }
@@ -70,15 +70,20 @@ public class JwtTokenUtil {
         return (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
-    public String refreshToken(String token) {
-        final LocalDateTime issued = LocalDateTime.now();
-        final LocalDateTime expires = issued.plusHours(1);
-        byte[] keyBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signatureKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
-        final Claims claims = getAllClaimsFromToken(token);
-        claims.setIssuedAt(Date.from(issued.atZone(ZoneId.systemDefault()).toInstant()));
-        claims.setExpiration(Date.from(expires.atZone(ZoneId.systemDefault()).toInstant()));
-        return Jwts.builder().setClaims(claims).signWith(signatureKey).compact();
+    public ResponseCookie generateRefreshToken(User user) {
+        Key signatureKey = new SecretKeySpec(DatatypeConverter.parseBase64Binary(secret), SignatureAlgorithm.HS256.getJcaName());
+        String refreshJwt = Jwts.builder()
+                .setSubject(user.getEmail())
+                .setIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(signatureKey)
+                .compact();
+        return ResponseCookie.from("refreshToken", refreshJwt)
+                .httpOnly(true).secure(true).path("/api/users/auth/refresh").maxAge(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).getSecond()).sameSite("lax").build();
+    }
+
+    public ResponseCookie getCleanJwtCookie() {
+        return ResponseCookie.from("refreshToken", null).path("/api/users/auth/refresh").build();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

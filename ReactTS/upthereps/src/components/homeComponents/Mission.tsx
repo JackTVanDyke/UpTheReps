@@ -1,4 +1,4 @@
-import Gym from '../assets/Gym.jpg'
+import Gym from '../../assets/Gym.jpg'
 const Mission = () => {
   return (
     <section className='flex flex-col text-center items-center justify-center min-w-full min-h-[300px]'>
@@ -11,9 +11,12 @@ const Mission = () => {
           <p className='w-3/4 lg:w-1/2'>
             Many new lifters are not training correctly for their goals. UpTheReps removes all the
             boring stuff from the gym process and leaves you with the best part - putting in the
-            work. UpTheReps is made for beginner/intermediate lifters who struggle with programming
-            and consistency, helping them achieve their goals with less effort. If you are looking
-            to get to work and chase your best self, join us today.
+            work.
+          </p>
+          <p className='w-3/4 lg:w-1/2'>
+            UpTheReps is for beginner/intermediate lifters who struggle with programming and
+            consistency, helping them achieve their goals with less effort. If you are looking to
+            get to work and chase your best self, join us today.
           </p>
         </div>
       </div>

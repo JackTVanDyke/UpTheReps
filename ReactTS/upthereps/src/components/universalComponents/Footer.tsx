@@ -34,7 +34,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className='bg-brand text-white pt-2 mt-2 text-xsm text-center'>©2022 UpTheReps.</div>
+      <div className='bg-brand text-white pt-2 my-1 text-xsm text-center'>©2022 UpTheReps.</div>
     </footer>
   )
 }

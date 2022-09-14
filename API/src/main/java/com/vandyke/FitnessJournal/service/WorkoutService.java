@@ -14,4 +14,6 @@ public interface WorkoutService {
     String updateWorkout(Workout workout);
     String deleteWorkout(Workout workout);
     List<Optional<Workout>> getWorkoutsByUserId(long userId);
+
+    String deleteWorkoutById(long workoutId);
 }

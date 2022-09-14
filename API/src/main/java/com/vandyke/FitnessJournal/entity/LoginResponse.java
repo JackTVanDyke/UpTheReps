@@ -1,5 +1,7 @@
 package com.vandyke.FitnessJournal.entity;
 
+import javax.servlet.http.Cookie;
+
 public class LoginResponse {
 
     private String jwt;
@@ -14,6 +16,10 @@ public class LoginResponse {
         this.role = role;
         this.fName = fName;
         this.userId = userId;
+    }
+
+    public LoginResponse(String jwt) {
+        this.jwt = jwt;
     }
 
     public LoginResponse() {
@@ -69,4 +75,6 @@ public class LoginResponse {
                 ", userId=" + userId +
                 '}';
     }
+
+
 }
